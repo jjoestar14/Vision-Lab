@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020814">
+    <meta name="description" content="Workspace pengolahan citra untuk segmentasi Adaptive Gaussian Thresholding.">
+    <title>VisionLab — Adaptive Gaussian Thresholding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=5">
+</head>
+<body>
+    <div class="ambient ambient-cyan" aria-hidden="true"></div>
+    <div class="ambient ambient-violet" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <a class="brand" href="/" aria-label="VisionLab Home">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z" stroke="currentColor" stroke-width="1.5"/><path d="m8 10 4-2.2 4 2.2v4l-4 2.2L8 14v-4Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 3v4.8M20 7.5l-4 2.5M4 7.5l4 2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+            </span>
+            <span class="brand-copy"><strong>VISION<span>LAB</span></strong><small>IMAGE PROCESSING WORKSPACE</small></span>
+        </a>
+        <div class="topbar-right">
+            <span class="course-chip"><span class="chip-dot"></span> COMPUTER VISION</span>
+            <span class="system-status" id="systemStatus"><span class="status-dot"></span><span id="systemStatusText">INITIALIZING</span></span>
+        </div>
+    </header>
+
+    <main class="app-shell">
+        <aside class="source-panel glass-panel">
+            <div class="panel-head source-panel-head">
+                <div>
+                    <span class="eyebrow">01 / INPUT SOURCE</span>
+                    <h2>Image Library</h2>
+                </div>
+                <span class="icon-chip" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4" width="17" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="9" r="1.5" stroke="currentColor" stroke-width="1.5"/><path d="m5 17 5-5 3 3 2-2 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+            </div>
+
+            <label class="field-label" for="sampleSearch">SAMPLE IMAGES <span id="sampleCount">LOADING</span></label>
+            <div class="search-field">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3" stroke="currentColor" stroke-width="1.7"/><path d="m15.5 15.5 4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <input id="sampleSearch" type="search" placeholder="Cari citra sampel..." autocomplete="off">
+            </div>
+            <div class="sample-list" id="sampleList" aria-live="polite">
+                <div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>
+            </div>
+
+            <div class="source-divider"><span>OR</span></div>
+
+            <div class="upload-zone" id="uploadDropZone">
+                <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/bmp" class="visually-hidden">
+                <label for="fileInput" class="upload-content" id="uploadLabel">
+                    <span class="upload-icon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 14v4.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                    <strong>Drop an image here</strong>
+                    <span>or <u>browse files</u></span>
+                    <small>PNG · JPG · WEBP · BMP — Max 12 MB</small>
+                </label>
+            </div>
+
+            <div class="sidebar-note">
+                <span class="note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 10.5v5M12 7.5h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                <p>Gunakan citra dengan latar yang tidak merata untuk melihat keunggulan threshold lokal.</p>
+            </div>
+        </aside>
+
+        <section class="workspace">
+            <section class="hero-row">
+                <div class="hero-copy">
+                    <div class="eyebrow hero-eyebrow"><span class="eyebrow-line"></span> SEGMENTATION MODULE</div>
+                    <h1>Adaptive Gaussian<br><span>Thresholding</span></h1>
+                    <p>Segmentasi citra berbasis ambang lokal dengan pembobotan Gaussian. Dirancang untuk menangani pencahayaan yang tidak merata.</p>
+                </div>
+                <div class="algorithm-card glass-panel">
+                    <span class="algorithm-orbit orbit-one"></span><span class="algorithm-orbit orbit-two"></span>
+                    <div class="algorithm-glyph" aria-hidden="true">
+                        <svg viewBox="0 0 88 88" fill="none"><rect x="13" y="13" width="62" height="62" rx="12" stroke="currentColor" stroke-opacity=".45"/><path d="M24 28h40M24 38h40M24 48h40M24 58h40" stroke="currentColor" stroke-opacity=".24"/><path d="M28 24v40M38 24v40M48 24v40M58 24v40" stroke="currentColor" stroke-opacity=".24"/><rect x="31" y="31" width="26" height="26" rx="5" fill="currentColor" fill-opacity=".14" stroke="currentColor"/><circle cx="44" cy="44" r="8" fill="currentColor" fill-opacity=".4"/><circle cx="44" cy="44" r="3" fill="currentColor"/></svg>
+                    </div>
+                    <div class="algorithm-card-copy"><span>ACTIVE ALGORITHM</span><strong>ADAPTIVE GAUSSIAN</strong><small>LOCAL THRESHOLD · GRAYSCALE</small></div>
+                    <span class="algorithm-state"><span></span> READY</span>
+                </div>
+            </section>
+
+            <section class="metrics-grid" aria-label="Informasi pemrosesan">
+                <article class="metric-card glass-panel"><span class="metric-label">SOURCE RESOLUTION</span><strong id="metricResolution">—</strong><small>width × height pixels</small></article>
+                <article class="metric-card glass-panel"><span class="metric-label">LOCAL WINDOW</span><strong id="metricBlockSize">21 <em>px</em></strong><small>Gaussian neighbourhood</small></article>
+                <article class="metric-card glass-panel"><span class="metric-label">PROCESSING TIME</span><strong id="metricTime">—</strong><small>OpenCV execution</small></article>
+                <article class="metric-card glass-panel metric-state"><span class="metric-label">OUTPUT STATUS</span><strong id="metricStatus">WAITING</strong><small id="metricStatusCaption">Pilih citra untuk memulai</small></article>
+            </section>
+
+            <section class="comparison-panel glass-panel">
+                <div class="section-heading">
+                    <div><span class="eyebrow">02 / VISUAL INSPECTION</span><h2>Image comparison</h2></div>
+                    <div class="comparison-actions">
+                        <span class="live-badge"><span></span> LIVE PREVIEW</span>
+                        <button class="icon-button" id="resetViewButton" type="button" title="Reset tampilan" aria-label="Reset tampilan">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M20 11a8 8 0 0 0-14.8-3L3 11m0-7v7h7M4 13a8 8 0 0 0 14.8 3L21 13m0 7v-7h-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="comparison-grid">
+                    <article class="image-card">
+                        <div class="image-card-heading"><div><span class="image-index">A</span><div><strong>Original image</strong><small id="originalImageName">Pilih gambar di library</small></div></div><span class="image-mode">RGB INPUT</span></div>
+                        <div class="image-stage" id="originalStage"><div class="image-empty"><span class="empty-glyph"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="9" r="1.5" stroke="currentColor" stroke-width="1.5"/><path d="m4 17 5-5 3 3 3-4 5 6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span>Menunggu citra masukan</span></div><img id="originalImage" alt="Citra asli" hidden></div>
+                        <div class="image-card-footer"><span><i class="tiny-dot"></i> INPUT</span><span id="originalDimensions">—</span></div>
+                    </article>
+                    <article class="image-card result-card">
+                        <div class="image-card-heading"><div><span class="image-index result-index">B</span><div><strong>Binary output</strong><small>Adaptive Gaussian result</small></div></div><span class="image-mode output-mode">0 / 255</span></div>
+                        <div class="image-stage output-stage" id="resultStage"><div class="image-empty"><span class="empty-glyph"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span>Hasil binarisasi akan muncul di sini</span></div><img id="resultImage" alt="Hasil Adaptive Gaussian Thresholding" hidden></div>
+                        <div class="image-card-footer"><span><i class="tiny-dot cyan-dot"></i> PROCESSED</span><span id="resultDimensions">—</span></div>
+                    </article>
+                </div>
+                <div class="comparison-footnote"><span class="info-symbol">i</span><p>Adaptive Gaussian menghitung nilai ambang dari lingkungan lokal setiap piksel, bukan dari satu nilai ambang global.</p><span class="footnote-code">LOCAL T(x,y)</span></div>
+            </section>
+
+            <section class="control-grid">
+                <div class="settings-panel glass-panel">
+                    <div class="section-heading compact-heading"><div><span class="eyebrow">03 / PARAMETERS</span><h2>Processing controls</h2></div><span class="parameter-count">02 PARAMS</span></div>
+                    <div class="parameter-grid">
+                        <div class="parameter-control">
+                            <div class="parameter-label-row"><label for="blockSizeSlider">Block size</label><output id="blockSizeValue" for="blockSizeSlider">15 px</output></div>
+                            <input type="range" id="blockSizeSlider" min="3" max="51" step="2" value="15">
+                            <div class="range-ends"><span>3 px</span><span>51 px</span></div>
+                            <p>Ukuran area tetangga; wajib bernilai ganjil.</p>
+                        </div>
+                        <div class="parameter-control">
+                            <div class="parameter-label-row"><label for="cValueSlider">Constant C</label><output id="cValue">4</output></div>
+                            <input type="range" id="cValueSlider" min="-10" max="25" step="1" value="4">
+                            <div class="range-ends"><span>-10</span><span>25</span></div>
+                            <p>Nilai yang dikurangkan dari rata-rata Gaussian lokal.</p>
+                        </div>
+                    </div>
+                    <label class="denoise-toggle" for="denoiseToggle"><span class="toggle-copy"><strong>Pre-processing · Gaussian blur</strong><small>Kurangi noise sebelum thresholding (opsional)</small></span><span class="switch"><input id="denoiseToggle" type="checkbox"><span class="switch-track"></span></span></label>
+                    <div class="settings-footer"><span id="parameterSummary">Block size 15 · C = 4</span><button class="button-primary" type="button" id="processButton"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" fill="currentColor"/></svg><span>Process image</span></button></div>
+                </div>
+
+                <div class="analysis-panel glass-panel">
+                    <div class="section-heading compact-heading"><div><span class="eyebrow">04 / IMAGE ANALYSIS</span><h2>Intensity distribution</h2></div><span class="chart-label">GRAYSCALE · 0—255</span></div>
+                    <div class="histogram-wrap"><canvas id="histogramCanvas" width="520" height="150" aria-label="Histogram intensitas grayscale"></canvas><div class="histogram-axis"><span>0 · BLACK</span><span>128 · MID</span><span>255 · WHITE</span></div></div>
+                    <div class="distribution-legend"><span><i class="legend-square"></i> Pixel intensity frequency</span><span id="pixelCountLabel">— pixels</span></div>
+                    <div class="distribution-note">Grafik menunjukkan distribusi intensitas citra grayscale. Metode adaptif tidak menghasilkan satu nilai T global.</div>
+                </div>
+            </section>
+
+            <section class="result-summary glass-panel">
+                <div class="summary-title"><span class="summary-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4z" stroke="currentColor" stroke-width="1.5"/><path d="M8 9h8M8 12h8M8 15h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><div><span class="eyebrow">OUTPUT SUMMARY</span><strong>Binary pixel composition</strong></div></div>
+                <div class="composition-metric"><div class="composition-label"><span>White pixels</span><strong id="whitePercent">—</strong></div><div class="composition-track"><span id="whiteBar" class="white-bar" style="width:0%"></span></div></div>
+                <div class="composition-metric"><div class="composition-label"><span>Black pixels</span><strong id="blackPercent">—</strong></div><div class="composition-track"><span id="blackBar" class="black-bar" style="width:0%"></span></div></div>
+                <div class="summary-spacer"></div>
+                <button class="button-secondary" type="button" id="downloadButton" disabled><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 18v2h16v-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg> Download PNG</button>
+            </section>
+
+            <footer class="app-footer"><span>VISIONLAB <b>●</b> ADAPTIVE GAUSSIAN THRESHOLDING</span><span>FLASK + OPENCV <i id="footerStatus">LOCAL WORKSPACE</i></span></footer>
+        </section>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-mark"></span><span id="toastText">Ready</span></div>
+    <script src="/static/js/main.js?v=5"></script>
+</body>
+</html>
