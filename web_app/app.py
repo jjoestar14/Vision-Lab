@@ -17,14 +17,23 @@ import numpy as np
 from flask import Flask, jsonify, render_template, request
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
-app.config["MAX_CONTENT_LENGTH"] = 12 * 1024 * 1024  # 12 MB per upload
-
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
 SAMPLE_DIR = PROJECT_DIR / "sample_images"
-UPLOAD_DIR = BASE_DIR / "uploads"
+
+# Di Vercel Serverless, hanya direktori /tmp yang memiliki izin tulis
+if os.environ.get("VERCEL"):
+    UPLOAD_DIR = Path("/tmp/uploads")
+else:
+    UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+app = Flask(
+    __name__,
+    static_folder=str(BASE_DIR / "static"),
+    template_folder=str(BASE_DIR / "templates"),
+)
+app.config["MAX_CONTENT_LENGTH"] = 12 * 1024 * 1024  # 12 MB per upload
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "bmp", "webp"}
 DEFAULT_IMAGE = "peach.jpg"
